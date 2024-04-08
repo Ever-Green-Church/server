@@ -1,4 +1,4 @@
-package com.evergreen.evergreenserver.domain.entity.board;
+package com.evergreen.evergreenserver.domain.board.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +14,7 @@ public class Board {
   private Long id;
 
   @Column
-  private String name;
+  private String title;
 
   @Column
   private String contents;
