@@ -19,4 +19,6 @@ public class Board {
   @Column
   private String contents;
 
+  @Column
+  private String contents1;
 }
