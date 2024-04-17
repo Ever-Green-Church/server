@@ -20,5 +20,5 @@ public class Board {
   private String contents;
 
   @Column
-  private String contents42;
+  private String contents422;
 }
