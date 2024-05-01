@@ -31,6 +31,9 @@ public class User {
   @Enumerated(value = EnumType.STRING)
   private UserRoleEnum role;
 
+  @Column(name = "kakaoId")
+  private Long kakaoId;
+
   public User(String loginId, String password) {
     this.loginId = loginId;
     this.password = password;
