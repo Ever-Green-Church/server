@@ -29,7 +29,7 @@ public class Board extends BaseEntity {
   private String title;
 
   @Column
-  private String contents;
+  private String contents1;
 
 
 }
