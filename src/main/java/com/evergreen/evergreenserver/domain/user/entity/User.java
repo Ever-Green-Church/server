@@ -34,9 +34,25 @@ public class User {
   @Column(name = "kakaoId")
   private Long kakaoId;
 
+  @Column(name = "email")
+  private String email;
+
   public User(String loginId, String password) {
     this.loginId = loginId;
     this.password = password;
     this.role = UserRoleEnum.USER;
+  }
+
+  public User(String nickname, String email, String encodedPassword, Long kakaoId) {
+    this.loginId = nickname;
+    this.password = encodedPassword;
+    this.email = email;
+    this.kakaoId = kakaoId;
+    this.role = UserRoleEnum.USER;
+  }
+
+  public User kakaoIdUpdate(Long kakaoId) {
+    this.kakaoId = kakaoId;
+    return this;
   }
 }

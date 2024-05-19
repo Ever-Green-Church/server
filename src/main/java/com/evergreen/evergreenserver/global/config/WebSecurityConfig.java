@@ -1,8 +1,8 @@
-package com.evergreen.evergreenserver.global.jwt.config;
+package com.evergreen.evergreenserver.global.config;
 
+import com.evergreen.evergreenserver.global.filter.JwtAuthorizationFilter;
+import com.evergreen.evergreenserver.global.filter.UserDetailsServiceImpl;
 import com.evergreen.evergreenserver.global.jwt.JwtUtil;
-import com.evergreen.evergreenserver.global.jwt.filter.JwtAuthorizationFilter;
-import com.evergreen.evergreenserver.global.jwt.filter.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

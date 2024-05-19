@@ -1,4 +1,4 @@
-package com.evergreen.evergreenserver.global.jwt.filter;
+package com.evergreen.evergreenserver.global.filter;
 
 
 import com.evergreen.evergreenserver.domain.user.entity.User;

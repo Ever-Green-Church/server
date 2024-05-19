@@ -1,6 +1,6 @@
 package com.evergreen.evergreenserver.global.jwt;
 
-import com.evergreen.evergreenserver.domain.user.entity.UserRoleEnum;
+import com.evergreen.evergreenserver.global.exception.ApiException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -12,15 +12,17 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -28,10 +30,12 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class JwtUtil {
 
+  private final RedisTemplate<String, String> redisTemplate;
+
   public static final String AUTHORIZATION_HEADER = "Authorization";
-  public static final String AUTHORIZATION_KEY = "auth";
   public static final String BEARER_PREFIX = "Bearer ";
-  private final long TOKEN_TIME = 60 * 60 * 1000L;
+  public static final long ACCESS_TOKEN_TIME = 15 * 60 * 1000;  // 15분
+  public static final long REFRESH_TOKEN_TIME = 7 * 24 * 60 * 60 * 1000;  // 7일
 
   @Value("${jwt.secret.key}")
   private String secretKey;
@@ -45,32 +49,48 @@ public class JwtUtil {
     key = Keys.hmacShaKeyFor(bytes);
   }
 
-  // JWT 생성
-  public String createToken(String username, UserRoleEnum role) {
+  public String createAccessToken(String loginId) {
+    return createToken(loginId, ACCESS_TOKEN_TIME);
+  }
+
+  public String createRefreshToken(String loginId) {
+    return createToken(loginId, REFRESH_TOKEN_TIME);
+  }
+
+  private String createToken(String loginId, long tokenTime) {
     Date date = new Date();
 
     return BEARER_PREFIX +
         Jwts.builder()
-            .setSubject(username) // 사용자 식별자값(ID)
-            .claim(AUTHORIZATION_KEY, role) // 사용자 권한 (key, value) 형태
-            .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간 (현재시간+만료시킬 시간)
-            .setIssuedAt(date) // 발급일
-            .signWith(key, signatureAlgorithm) // 암호화 알고리즘 (secretKey, 선택한 알고리즘)
+            .setSubject(loginId)
+            .setExpiration(new Date(date.getTime() + tokenTime))
+            .setIssuedAt(date)
+            .signWith(key, signatureAlgorithm)
             .compact();
   }
 
-  // 생성된 JWT를 Cookie에 저장
-  public void addJwtToCookie(String token, HttpServletResponse res) {
-    try {
-      token = URLEncoder.encode(token, "utf-8")
-          .replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
+  public void saveAccessTokenByLoginId(String loginId, String accessToken) {
+    redisTemplate.opsForValue()
+        .set(loginId, accessToken, REFRESH_TOKEN_TIME, TimeUnit.MILLISECONDS);
+  }
 
-      Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // Name-Value
+  public void saveRefreshTokenByAccessToken(String accessToken, String refreshToken) {
+    redisTemplate.opsForValue()
+        .set(accessToken, refreshToken, REFRESH_TOKEN_TIME, TimeUnit.MILLISECONDS);
+  }
+
+  // 세션 쿠키
+  public Cookie addJwtToCookie(String bearerAccessToken) {
+    try {
+      String spaceRemovedToken = URLEncoder.encode(bearerAccessToken, "utf-8")
+          .replaceAll("\\+", "%20"); // 공백 제거
+
+      Cookie cookie = new Cookie(AUTHORIZATION_HEADER, spaceRemovedToken);
       cookie.setPath("/");
 
-      // Response 객체에 Cookie 추가
-      res.addCookie(cookie);
+      return cookie;
     } catch (UnsupportedEncodingException e) {
+      throw new ApiException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -121,5 +141,15 @@ public class JwtUtil {
     return null;
   }
 
+  public Boolean checkIsLoggedIn(String loginId) {
+    if (redisTemplate.hasKey(loginId)) {
+      return true;
+    }
+    return false;
+  }
+
+  public String getAccessTokenByLoginId(String loginId) {
+    return redisTemplate.opsForValue().get(loginId);
+  }
 
 }
