@@ -40,10 +40,27 @@ public class UserController {
     return new SignupResponseDto("성공");
   }
 
-  //  location.href='https://kauth.kakao.com/oauth/authorize?client_id='+${kakao.client.id}+'&redirect_uri=http://localhost:8080/v1/users/kakao/callback&response_type=code'
+  /**
+   * 카카오 로그인 요청
+   *
+   * @return 요청 주소로 redirect
+   * location.href='https://kauth.kakao.com/oauth/authorize?client_id='+${kakao.client.id}+'&redirect_uri=http://localhost:8080/v1/users/kakao/callback&response_type=code'
+   */
+  @GetMapping("/auth/kakao/login")
+  public ResponseEntity<ApiResponse> kakaoLogin() {
+    return ResponseEntity.ok().body(new ApiResponse(kakaoService.clientId, HttpStatus.OK.value()));
+  }
+
+  /**
+   * 카카오 로그인 콜백
+   *
+   * @param code     카카오에서 전달해주는 인증코드
+   * @param response HttpServletResponse 객체
+   * @return 홈페이지로 리다이렉트
+   * @throws JsonProcessingException
+   */
   @GetMapping("/kakao/callback")
-  public ResponseEntity<ApiResponse> kakaoLoginCallback(
-      @RequestParam String code,
+  public ResponseEntity<ApiResponse> kakaoLoginCallback(@RequestParam String code,
       HttpServletResponse response) throws JsonProcessingException {
 
     String accessToken = kakaoService.kakaoLogin(code);
@@ -52,8 +69,7 @@ public class UserController {
     response.addCookie(cookie);
 
     return ResponseEntity.status(HttpStatus.FOUND)
-        .header(HttpHeaders.LOCATION,
-            "/")
+        .header(HttpHeaders.LOCATION, "/")
         .body(new ApiResponse("카카오 로그인 성공 및 리다이렉트", HttpStatus.FOUND.value()));
   }
 }
