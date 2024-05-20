@@ -43,19 +43,19 @@ public class KakaoService {
 
     // 3. 필요시에 회원가입
     User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
-    String loginId = kakaoUser.getLoginId();
+    String email = kakaoUser.getEmail();
 
     // 이미 로그인 되어 있는지 확인
-    if (jwtUtil.checkIsLoggedIn(loginId)) {
-      return jwtUtil.getAccessTokenByLoginId(loginId);
+    if (jwtUtil.checkIsLoggedIn(email)) {
+      return jwtUtil.getAccessTokenByEmail(email);
     }
 
     // accessToken을 만들어서 반환
-    String bearerAccessToken = jwtUtil.createAccessToken(loginId);
+    String bearerAccessToken = jwtUtil.createAccessToken(email);
 
     // 토큰을 DB에 저장
-    jwtUtil.saveAccessTokenByLoginId(loginId, bearerAccessToken);
-    String refreshToken = jwtUtil.createRefreshToken(loginId);
+    jwtUtil.saveAccessTokenByEmail(email, bearerAccessToken);
+    String refreshToken = jwtUtil.createRefreshToken(email);
     jwtUtil.saveRefreshTokenByAccessToken(bearerAccessToken, refreshToken);
 
     return bearerAccessToken;
@@ -144,29 +144,17 @@ public class KakaoService {
     User kakaoUser = userRepository.findByKakaoId(kakaoId).orElse(null);
 
     if (kakaoUser == null) {
-      // 카카오 사용자 email 동일한 email 가진 회원이 있는지 확인
-      String kakaoEmail = kakaoUserInfo.getEmail();
-      User sameEmailUser = userRepository.findByEmail(kakaoEmail).orElse(null);
-      if (sameEmailUser != null) {
-        kakaoUser = sameEmailUser;
-        // 기존 회원정보에 카카오 Id 추가
-        kakaoUser = kakaoUser.kakaoIdUpdate(kakaoId);
-        //Transactional이 필요 없게 하려고 return을 kakaoUser라는 객체로 했다.
-        // save (@Transactional 걸어버리면 하나의 오류라도 있으면 다시 롤백되므로, 오류 난건 그대로 놓고 나머지 잘 수행된건 그대로 DB에 영향을 주게 하고 싶기 때문.)
-      } else {
-        // 신규 회원가입
-        // password: random UUID
-        String password = UUID.randomUUID().toString();
-        String encodedPassword = passwordEncoder.encode(password);
+      // 신규 회원가입, password: random UUID
+      String password = UUID.randomUUID().toString();
+      String encodedPassword = passwordEncoder.encode(password);
 
-        // email: kakao email
-        String email = kakaoUserInfo.getEmail();
+      // email: kakao email
+      String email = kakaoUserInfo.getEmail();
 
-        // image
-        String url = kakaoUserInfo.getImageUrl();
+      // image
+      String url = kakaoUserInfo.getImageUrl();
 
-        kakaoUser = new User(kakaoUserInfo.getNickname(), email, encodedPassword, kakaoId);
-      }
+      kakaoUser = new User(kakaoUserInfo.getNickname(), email, encodedPassword, kakaoId);
 
       userRepository.save(kakaoUser);
     }

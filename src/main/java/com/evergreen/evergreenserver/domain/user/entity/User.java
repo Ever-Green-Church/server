@@ -21,8 +21,8 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "loginId")
-  private String loginId;
+  @Column(name = "nickname")
+  private String nickname;
 
   @Column
   private String password;
@@ -37,22 +37,18 @@ public class User {
   @Column(name = "email")
   private String email;
 
-  public User(String loginId, String password) {
-    this.loginId = loginId;
+  public User(String nickname, String password) {
+    this.nickname = nickname;
     this.password = password;
     this.role = UserRoleEnum.USER;
   }
 
   public User(String nickname, String email, String encodedPassword, Long kakaoId) {
-    this.loginId = nickname;
+    this.nickname = nickname;
     this.password = encodedPassword;
     this.email = email;
     this.kakaoId = kakaoId;
     this.role = UserRoleEnum.USER;
   }
 
-  public User kakaoIdUpdate(Long kakaoId) {
-    this.kakaoId = kakaoId;
-    return this;
-  }
 }

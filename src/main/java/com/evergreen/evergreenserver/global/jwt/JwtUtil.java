@@ -49,29 +49,29 @@ public class JwtUtil {
     key = Keys.hmacShaKeyFor(bytes);
   }
 
-  public String createAccessToken(String loginId) {
-    return createToken(loginId, ACCESS_TOKEN_TIME);
+  public String createAccessToken(String email) {
+    return createToken(email, ACCESS_TOKEN_TIME);
   }
 
-  public String createRefreshToken(String loginId) {
-    return createToken(loginId, REFRESH_TOKEN_TIME);
+  public String createRefreshToken(String email) {
+    return createToken(email, REFRESH_TOKEN_TIME);
   }
 
-  private String createToken(String loginId, long tokenTime) {
+  private String createToken(String email, long tokenTime) {
     Date date = new Date();
 
     return BEARER_PREFIX +
         Jwts.builder()
-            .setSubject(loginId)
+            .setSubject(email)
             .setExpiration(new Date(date.getTime() + tokenTime))
             .setIssuedAt(date)
             .signWith(key, signatureAlgorithm)
             .compact();
   }
 
-  public void saveAccessTokenByLoginId(String loginId, String accessToken) {
+  public void saveAccessTokenByEmail(String email, String accessToken) {
     redisTemplate.opsForValue()
-        .set(loginId, accessToken, REFRESH_TOKEN_TIME, TimeUnit.MILLISECONDS);
+        .set(email, accessToken, REFRESH_TOKEN_TIME, TimeUnit.MILLISECONDS);
   }
 
   public void saveRefreshTokenByAccessToken(String accessToken, String refreshToken) {
@@ -92,14 +92,6 @@ public class JwtUtil {
     } catch (UnsupportedEncodingException e) {
       throw new ApiException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
-
-  public String substringToken(String tokenValue) {
-    if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(
-        BEARER_PREFIX)) {
-      return tokenValue.substring(7);
-    }
-    throw new NullPointerException("Not Found Token");
   }
 
   // JWT 검증
@@ -141,15 +133,15 @@ public class JwtUtil {
     return null;
   }
 
-  public Boolean checkIsLoggedIn(String loginId) {
-    if (redisTemplate.hasKey(loginId)) {
+  public Boolean checkIsLoggedIn(String email) {
+    if (redisTemplate.hasKey(email)) {
       return true;
     }
     return false;
   }
 
-  public String getAccessTokenByLoginId(String loginId) {
-    return redisTemplate.opsForValue().get(loginId);
+  public String getAccessTokenByEmail(String email) {
+    return redisTemplate.opsForValue().get(email);
   }
 
   public boolean shouldAccessTokenBeRefreshed(String accessTokenValue) {
@@ -168,20 +160,20 @@ public class JwtUtil {
   }
 
   public String createAccessTokenByRefreshToken(String refreshTokenValue) {
-    String loginId = getUserInfoFromToken(refreshTokenValue).getSubject();
-    return createAccessToken(loginId);
+    String email = getUserInfoFromToken(refreshTokenValue).getSubject();
+    return createAccessToken(email);
   }
 
   public void regenerateToken(String newAccessToken, String accessToken,
       String refreshTokenValue) {
     Claims info = getUserInfoFromToken(refreshTokenValue);
-    String loginId = info.getSubject();
+    String email = info.getSubject();
 
     Long expirationTime = info.getExpiration().getTime();
 
     // 새로 만든 AccessToken을 redis에 저장
     redisTemplate.opsForValue()
-        .set(loginId, newAccessToken,
+        .set(email, newAccessToken,
             expirationTime, TimeUnit.MILLISECONDS);
 
     // 새로 만든 AccessToken을 key로 refreshToken을 다시 DB에 저장
