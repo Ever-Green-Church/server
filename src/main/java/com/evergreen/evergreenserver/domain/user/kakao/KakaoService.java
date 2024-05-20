@@ -152,9 +152,9 @@ public class KakaoService {
       String email = kakaoUserInfo.getEmail();
 
       // image
-      String url = kakaoUserInfo.getImageUrl();
+      String imageUrl = kakaoUserInfo.getImageUrl();
 
-      kakaoUser = new User(kakaoUserInfo.getNickname(), email, encodedPassword, kakaoId);
+      kakaoUser = new User(kakaoUserInfo.getNickname(), email, encodedPassword, kakaoId, imageUrl);
 
       userRepository.save(kakaoUser);
     }

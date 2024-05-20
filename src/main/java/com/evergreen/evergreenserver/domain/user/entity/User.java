@@ -37,18 +37,22 @@ public class User {
   @Column(name = "email")
   private String email;
 
+  @Column(name = "image")
+  private String image;
+
   public User(String nickname, String password) {
     this.nickname = nickname;
     this.password = password;
     this.role = UserRoleEnum.USER;
   }
 
-  public User(String nickname, String email, String encodedPassword, Long kakaoId) {
+  public User(String nickname, String email, String encodedPassword, Long kakaoId, String imageUrl) {
     this.nickname = nickname;
     this.password = encodedPassword;
     this.email = email;
     this.kakaoId = kakaoId;
     this.role = UserRoleEnum.USER;
+    this.image = imageUrl;
   }
 
 }
