@@ -1,8 +1,9 @@
-package com.evergreen.evergreenserver.global.jwt.config;
+package com.evergreen.evergreenserver.global.config;
 
+import com.evergreen.evergreenserver.global.filter.FilterUtil;
+import com.evergreen.evergreenserver.global.filter.JwtAuthorizationFilter;
+import com.evergreen.evergreenserver.global.filter.UserDetailsServiceImpl;
 import com.evergreen.evergreenserver.global.jwt.JwtUtil;
-import com.evergreen.evergreenserver.global.jwt.filter.JwtAuthorizationFilter;
-import com.evergreen.evergreenserver.global.jwt.filter.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,7 @@ public class WebSecurityConfig {
 
   private final JwtUtil jwtUtil;
   private final UserDetailsServiceImpl userDetailsService;
+  private final FilterUtil filterUtil;
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -32,7 +34,7 @@ public class WebSecurityConfig {
 
   @Bean
   public JwtAuthorizationFilter jwtAuthorizationFilter() {
-    return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+    return new JwtAuthorizationFilter(jwtUtil, userDetailsService, filterUtil);
   }
 
   @Bean

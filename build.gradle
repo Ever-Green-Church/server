@@ -22,6 +22,10 @@ repositories {
 }
 
 dependencies {
+
+    //Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     //JWT
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
@@ -35,6 +39,7 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
+//    runtimeOnly 'mysql:mysql-connector-java:8.0.35'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'

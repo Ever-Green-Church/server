@@ -1,4 +1,4 @@
-package com.evergreen.evergreenserver.global.jwt.filter;
+package com.evergreen.evergreenserver.global.filter;
 
 
 import com.evergreen.evergreenserver.domain.user.entity.User;
@@ -38,7 +38,7 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public String getUsername() {
-    return user.getLoginId();
+    return user.getEmail();
   }
 
   @Override
