@@ -4,10 +4,7 @@ import com.evergreen.evergreenserver.global.exception.ApiException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
@@ -24,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 @Component
 @RequiredArgsConstructor
@@ -97,21 +93,20 @@ public class JwtUtil {
   // JWT 검증
   public boolean validateToken(String token) {
     try {
-      Jwts.parserBuilder().setSigningKey(key).build()
-          .parseClaimsJws(token);   // 토큰 검증 코드 (위변조 여부, 만료 여부 등 체크 가능)
-      return true;  //문제가 없다면 true를 반환.
-    } catch (SecurityException | MalformedJwtException | SignatureException e) {
-    } catch (ExpiredJwtException e) {
-    } catch (UnsupportedJwtException e) {
-    } catch (IllegalArgumentException e) {
+      Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+      return true;
+    } catch (Exception ignored) {
     }
-    return false;  //문제가 있다면 false가 반환.
+    return false;
   }
 
   // JWT에서 사용자 정보 가져오기
   public Claims getUserInfoFromToken(String token) {
-    return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-    //getBody라고 하면 바디 부분에 들어있는 Claims를 가져올 수 있음. -> 여기에 사용자 정보가 들어있음 (JWT가 claim 기반 웹토큰임)
+    try {
+      return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    } catch (Exception ex) {
+      throw new ApiException("토큰에서 유저 정보 조회 실패", HttpStatus.BAD_REQUEST);
+    }
   }
 
 
@@ -134,10 +129,7 @@ public class JwtUtil {
   }
 
   public Boolean checkIsLoggedIn(String email) {
-    if (redisTemplate.hasKey(email)) {
-      return true;
-    }
-    return false;
+      return redisTemplate.hasKey(email);
   }
 
   public String getAccessTokenByEmail(String email) {

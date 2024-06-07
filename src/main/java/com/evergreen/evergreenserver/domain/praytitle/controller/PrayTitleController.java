@@ -11,12 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/prayTitle")
 public class PrayTitleController {
 
-    private PrayTitleService prayTitleService;
+    private final PrayTitleService prayTitleService;
 
     @PostMapping("")
     public ResponseEntity<ApiResponse> postPrayTitle(@RequestBody PostPrayTitleDto postPrayTitleDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
