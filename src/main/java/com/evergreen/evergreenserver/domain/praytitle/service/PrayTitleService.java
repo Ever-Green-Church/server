@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PrayTitleService {
 
-    private PrayTitleRepository prayTitleRepository;
+    private final PrayTitleRepository prayTitleRepository;
 
     public void postPrayTitle(PostPrayTitleDto postPrayTitleDto, User user) {
         prayTitleRepository.save(new PrayTitle(postPrayTitleDto, user));
