@@ -55,8 +55,8 @@ public class KakaoService {
 
     // 토큰을 DB에 저장
     jwtUtil.saveAccessTokenByEmail(email, bearerAccessToken);
-    String refreshToken = jwtUtil.createRefreshToken(email);
-    jwtUtil.saveRefreshTokenByAccessToken(bearerAccessToken, refreshToken);
+    String bearerRefreshToken = jwtUtil.createRefreshToken(email);
+    jwtUtil.saveRefreshTokenByAccessToken(bearerAccessToken, bearerRefreshToken);
 
     return bearerAccessToken;
   }
