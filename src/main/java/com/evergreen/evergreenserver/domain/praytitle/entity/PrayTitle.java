@@ -19,7 +19,7 @@ public class PrayTitle {
     @Column
     private String nickname;
 
-    @Column
+    @Column(length = 5000)
     private String contents;
 
     @ManyToOne
