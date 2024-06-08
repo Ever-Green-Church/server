@@ -12,23 +12,27 @@ import lombok.NoArgsConstructor;
 @Table(name = "praytitle")
 public class PrayTitle {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column
-  private String nickname;
+    @Column
+    private String nickname;
 
-  @Column
-  private String contents;
+    @Column
+    private String contents;
 
-  @ManyToOne
-  @JoinColumn (name = "user")
-  private User user;
+    @ManyToOne
+    @JoinColumn(name = "user")
+    private User user;
 
-  public PrayTitle(PostPrayTitleDto postPrayTitleDto, User user) {
-    this.nickname = user.getNickname();
-    this.contents = postPrayTitleDto.getContents();
-    this.user = user;
-  }
+    public PrayTitle(PostPrayTitleDto postPrayTitleDto, User user) {
+        this.nickname = user.getNickname();
+        this.contents = postPrayTitleDto.getContents();
+        this.user = user;
+    }
+
+    public void updatePrayTilte(PostPrayTitleDto postPrayTitleDto) {
+        this.contents = postPrayTitleDto.getContents();
+    }
 }
