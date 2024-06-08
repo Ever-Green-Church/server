@@ -1,13 +1,6 @@
 package com.evergreen.evergreenserver.domain.user.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,42 +10,39 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @Column(name = "kakaoId")
+    private Long kakaoId;
 
-  @Column(name = "nickname")
-  private String nickname;
+    @Column(name = "nickname")
+    private String nickname;
 
-  @Column
-  private String password;
+    @Column
+    private String password;
 
-  @Column(nullable = false, name = "role")
-  @Enumerated(value = EnumType.STRING)
-  private UserRoleEnum role;
+    @Column(nullable = false, name = "role")
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
 
-  @Column(name = "kakaoId")
-  private Long kakaoId;
+    @Column(name = "email")
+    private String email;
 
-  @Column(name = "email")
-  private String email;
+    @Column(name = "image")
+    private String image;
 
-  @Column(name = "image")
-  private String image;
+    public User(String nickname, String password) {
+        this.nickname = nickname;
+        this.password = password;
+        this.role = UserRoleEnum.USER;
+    }
 
-  public User(String nickname, String password) {
-    this.nickname = nickname;
-    this.password = password;
-    this.role = UserRoleEnum.USER;
-  }
-
-  public User(String nickname, String email, String encodedPassword, Long kakaoId, String imageUrl) {
-    this.nickname = nickname;
-    this.password = encodedPassword;
-    this.email = email;
-    this.kakaoId = kakaoId;
-    this.role = UserRoleEnum.USER;
-    this.image = imageUrl;
-  }
+    public User(String nickname, String email, String encodedPassword, Long kakaoId, String imageUrl) {
+        this.nickname = nickname;
+        this.password = encodedPassword;
+        this.email = email;
+        this.kakaoId = kakaoId;
+        this.role = UserRoleEnum.USER;
+        this.image = imageUrl;
+    }
 
 }

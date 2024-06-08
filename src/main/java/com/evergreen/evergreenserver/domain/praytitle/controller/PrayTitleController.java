@@ -19,8 +19,8 @@ public class PrayTitleController {
     private final PrayTitleService prayTitleService;
 
     @PostMapping("")
-    public ResponseEntity<ApiResponse> postPrayTitle(@RequestBody PostPrayTitleDto postPrayTitleDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        prayTitleService.postPrayTitle(postPrayTitleDto, userDetails.getUser());
+    public ResponseEntity<ApiResponse> updatePrayTitle(@RequestBody PostPrayTitleDto postPrayTitleDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        prayTitleService.updatePrayTitle(postPrayTitleDto, userDetails.getUser());
 
         return ResponseEntity.ok().body(new ApiResponse<>("기도제목 업데이트 완료", HttpStatus.OK.value()));
     }
