@@ -15,20 +15,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PrayTitleService {
 
-    private final PrayTitleRepository prayTitleRepository;
+  private final PrayTitleRepository prayTitleRepository;
 
-    @Transactional
-    public void updatePrayTitle(PostPrayTitleDto postPrayTitleDto, User user) {
-        PrayTitle prayTitle = prayTitleRepository.findByUserWithFetchJoin(user).orElse(null);
-        if (prayTitle == null) {
-            prayTitleRepository.save(new PrayTitle(postPrayTitleDto, user));
-        } else {
-            prayTitle.updatePrayTilte(postPrayTitleDto);
-        }
+  @Transactional
+  public void updatePrayTitle(PostPrayTitleDto postPrayTitleDto, User user) {
+    PrayTitle prayTitle = prayTitleRepository.findByUserWithFetchJoin(user).orElse(null);
+    if (prayTitle == null) {
+      prayTitleRepository.save(new PrayTitle(postPrayTitleDto, user));
+    } else {
+      prayTitle.updatePrayTilte(postPrayTitleDto);
     }
+  }
 
-    public PrayTitleResponseDto getPrayTitle(Long prayTitleId) {
-        PrayTitle prayTitle = prayTitleRepository.findById(prayTitleId).orElseThrow(() -> new ApiException("기도제목이 존재하지 않습니다.", HttpStatus.BAD_REQUEST));
-        return new PrayTitleResponseDto(prayTitle);
-    }
+  public PrayTitleResponseDto getPrayTitle(Long prayTitleId) {
+    PrayTitle prayTitle = prayTitleRepository.findById(prayTitleId)
+        .orElseThrow(() -> new ApiException("기도제목이 존재하지 않습니다.", HttpStatus.BAD_REQUEST));
+    return new PrayTitleResponseDto(prayTitle);
+  }
 }

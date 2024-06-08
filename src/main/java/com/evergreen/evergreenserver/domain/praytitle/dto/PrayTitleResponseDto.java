@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PrayTitleResponseDto {
 
-    private String contents;
+  private String contents;
 
-    public PrayTitleResponseDto(PrayTitle prayTitle) {
-        this.contents = prayTitle.getContents();
-    }
+  public PrayTitleResponseDto(PrayTitle prayTitle) {
+    this.contents = prayTitle.getContents();
+  }
 
 }

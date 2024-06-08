@@ -8,8 +8,8 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class KakaoUserInfoDto {
 
-    private Long id;
-    private String nickname;
-    private String email;
-    private String imageUrl;
+  private Long id;
+  private String nickname;
+  private String email;
+  private String imageUrl;
 }
