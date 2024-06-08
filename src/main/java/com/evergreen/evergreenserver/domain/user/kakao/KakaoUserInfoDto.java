@@ -1,10 +1,6 @@
 package com.evergreen.evergreenserver.domain.user.kakao;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
@@ -12,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class KakaoUserInfoDto {
 
-  private Long id;
-  private String nickname;
-  private String email;
-  private String imageUrl;
+    private Long id;
+    private String nickname;
+    private String email;
+    private String imageUrl;
 }
