@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostPrayTitleDto {
 
-    private String contents;
+  private String contents;
 }

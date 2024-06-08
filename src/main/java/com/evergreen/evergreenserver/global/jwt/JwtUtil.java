@@ -9,9 +9,9 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -26,17 +26,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtUtil {
 
-  private final RedisTemplate<String, String> redisTemplate;
-
   public static final String AUTHORIZATION_HEADER = "Authorization";
   public static final String BEARER_PREFIX = "Bearer ";
   public static final long ACCESS_TOKEN_TIME = 15 * 60 * 1000;  // 15분
   public static final long REFRESH_TOKEN_TIME = 7 * 24 * 60 * 60 * 1000;  // 7일
-
+  private final RedisTemplate<String, String> redisTemplate;
+  private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
   @Value("${jwt.secret.key}")
   private String secretKey;
   private Key key;
-  private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
   @PostConstruct
   public void init() {
@@ -77,17 +75,13 @@ public class JwtUtil {
 
   // 세션 쿠키
   public Cookie addJwtToCookie(String bearerAccessToken) {
-    try {
-      String spaceRemovedToken = URLEncoder.encode(bearerAccessToken, "utf-8")
-          .replaceAll("\\+", "%20"); // 공백 제거
+    String spaceRemovedToken = URLEncoder.encode(bearerAccessToken, StandardCharsets.UTF_8)
+        .replaceAll("\\+", "%20"); // 공백 제거
 
-      Cookie cookie = new Cookie(AUTHORIZATION_HEADER, spaceRemovedToken);
-      cookie.setPath("/");
+    Cookie cookie = new Cookie(AUTHORIZATION_HEADER, spaceRemovedToken);
+    cookie.setPath("/");
 
-      return cookie;
-    } catch (UnsupportedEncodingException e) {
-      throw new ApiException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return cookie;
   }
 
   // JWT 검증
@@ -116,12 +110,8 @@ public class JwtUtil {
     if (cookies != null) {
       for (Cookie cookie : cookies) {
         if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
-          try {
-            return URLDecoder.decode(cookie.getValue(),
-                "UTF-8"); // Encode 되어 넘어간 Value를 다시 Decode 해줘야함
-          } catch (UnsupportedEncodingException e) {
-            return null;
-          }
+          return URLDecoder.decode(cookie.getValue(),
+              StandardCharsets.UTF_8); // Encode 되어 넘어간 Value를 다시 Decode 해줘야함
         }
       }
     }
@@ -129,7 +119,7 @@ public class JwtUtil {
   }
 
   public Boolean checkIsLoggedIn(String email) {
-      return redisTemplate.hasKey(email);
+    return redisTemplate.hasKey(email);
   }
 
   public String getAccessTokenByEmail(String email) {

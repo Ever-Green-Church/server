@@ -14,7 +14,8 @@ public class FilterUtil {
 
   private final ObjectMapper objectMapper;
 
-  public void setMassageToResponse(String msg, HttpServletResponse response, HttpStatus status) throws IOException {
+  public void setMassageToResponse(String msg, HttpServletResponse response, HttpStatus status)
+      throws IOException {
     ApiResponse apiResponse = new ApiResponse(msg, status.value());
     response.setStatus(status.value());
     response.setContentType("application/json; charset=UTF-8");
