@@ -19,7 +19,7 @@ public class PrayTitleService {
 
   @Transactional
   public void updatePrayTitle(PostPrayTitleDto postPrayTitleDto, User user) {
-    PrayTitle prayTitle = prayTitleRepository.findByUserWithFetchJoin(user).orElse(null);
+    PrayTitle prayTitle = prayTitleRepository.findByUser(user).orElse(null);
     if (prayTitle == null) {
       prayTitleRepository.save(new PrayTitle(postPrayTitleDto, user));
     } else {
