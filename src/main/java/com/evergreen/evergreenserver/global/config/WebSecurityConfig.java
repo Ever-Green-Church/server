@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -52,6 +53,7 @@ public class WebSecurityConfig {
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
             .permitAll() // resources 접근 허용 설정
             .requestMatchers("/v1/users/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/v1/boards").permitAll()
             .anyRequest().authenticated()
     );
 
