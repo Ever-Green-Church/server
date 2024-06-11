@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/board")
+@RequestMapping("/v1/boards")
 public class BoardController {
 
   private final BoardService boardService;
