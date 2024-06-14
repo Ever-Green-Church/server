@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/prayTitle")
+@RequestMapping("/v1/prayTitles")
 public class PrayTitleController {
 
     private final PrayTitleService prayTitleService;

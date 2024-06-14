@@ -1,6 +1,7 @@
 package com.evergreen.evergreenserver.domain.board.controller;
 
 import com.evergreen.evergreenserver.domain.board.dto.BoardResponseDto;
+import com.evergreen.evergreenserver.domain.board.dto.PagedBoardsResponseDto;
 import com.evergreen.evergreenserver.domain.board.dto.PostBoardDto;
 import com.evergreen.evergreenserver.domain.board.service.BoardService;
 import com.evergreen.evergreenserver.global.filter.UserDetailsImpl;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/board")
+@RequestMapping("/v1/boards")
 public class BoardController {
 
   private final BoardService boardService;
@@ -36,9 +38,17 @@ public class BoardController {
 
   @GetMapping()
   public ResponseEntity<ApiResponse> getPagedBoards(@PageableDefault Pageable pageable) {
-    Page<BoardResponseDto> page = boardService.getPagedBoards(pageable);
+    Page<PagedBoardsResponseDto> page = boardService.getPagedBoards(pageable);
 
-    return ResponseEntity.ok().body(new ApiResponse("게시물 조회 완료", HttpStatus.OK.value(), page));
+    return ResponseEntity.ok().body(new ApiResponse("게시물 목록 조회 완료", HttpStatus.OK.value(), page));
+  }
+
+  @GetMapping("/{boardId}")
+  public ResponseEntity<ApiResponse> getBoard(@PathVariable Long boardId) {
+    BoardResponseDto boardResponseDto = boardService.getBoard(boardId);
+
+    return ResponseEntity.ok()
+        .body(new ApiResponse("게시물 조회 완료", HttpStatus.OK.value(), boardResponseDto));
   }
 
 }
