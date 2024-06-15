@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,6 +50,17 @@ public class BoardController {
 
     return ResponseEntity.ok()
         .body(new ApiResponse("게시물 조회 완료", HttpStatus.OK.value(), boardResponseDto));
+  }
+
+  @PutMapping("{boardId}")
+  public ResponseEntity<ApiResponse> updateBoard(@PathVariable Long boardId,
+      @RequestBody PostBoardDto postBoardDto,
+      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    BoardResponseDto boardResponseDto = boardService.updateBoard(boardId, postBoardDto,
+        userDetails.getUser());
+
+    return ResponseEntity.ok()
+        .body(new ApiResponse("게시물 수정 완료", HttpStatus.OK.value(), boardResponseDto));
   }
 
 }
