@@ -41,4 +41,9 @@ public class Board extends Timestamped {
     this.contents = postBoardDto.getContents();
     this.user = user;
   }
+
+  public void updateBoard(PostBoardDto postBoardDto) {
+    this.title = postBoardDto.getTitle();
+    this.contents = postBoardDto.getContents();
+  }
 }
