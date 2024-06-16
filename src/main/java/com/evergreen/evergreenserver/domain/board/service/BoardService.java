@@ -55,4 +55,14 @@ public class BoardService {
 
     return new BoardResponseDto(board);
   }
+
+  public void deleteBoard(Long boardId, User user) {
+    Board board = boardRepository.findById(boardId)
+        .orElseThrow(() -> new ApiException("존재하지 않는 게시글 입니다.", HttpStatus.BAD_REQUEST));
+    if (!Objects.equals(board.getUser().getKakaoId(), user.getKakaoId())) {
+      throw new ApiException("본인의 게시글만 삭제 할 수 있습니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    boardRepository.delete(board);
+  }
 }
