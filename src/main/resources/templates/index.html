@@ -3,74 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>늘푸른교회</title>
-    <link rel="icon" href="/favicon-cross.png?v=1.1" type="image/png">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-        }
-        nav ul {
-            list-style: none;
-            padding: 0;
-        }
-        nav ul li {
-            display: inline;
-            margin: 0 10px;
-        }
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-        }
-        main {
-            padding: 20px;
-        }
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
-        }
-    </style>
+    <title>늘푸른 교회</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
+<!-- 헤더 영역 -->
 <header>
-    <h1>환영합니다!</h1>
+    <div class="logo">
+        <img src="logo.png" alt="교회 로고">
+    </div>
     <nav>
-        <ul>
+        <ul class="menu">
             <li><a href="#home">홈</a></li>
-            <li><a href="#about">소개</a></li>
-            <li><a href="#contact">연락처</a></li>
+            <li><a href="#pastor">담임 목사 소개</a></li>
+            <li><a href="#history">교회 연혁</a></li>
+            <li><a href="#organization">교회 조직</a></li>
+            <li><a href="#worship">예배 안내</a></li>
+            <li><a href="#location">오시는 길</a></li>
+            <li><a href="#ministries">사역 및 섬김</a></li>
         </ul>
     </nav>
+    <div class="login">
+        <a href="#login"><img src="login.png" alt="로그인"></a>
+    </div>
 </header>
+
+<!-- 메인 콘텐츠 영역 -->
 <main>
+    <!-- 홈 -->
     <section id="home">
-        <h2>인사말</h2>
-        <p>안녕하세요 늘푸른교회 홈페이지 입니다.</p>
+        <h2>2024년 늘푸른교회 목표</h2>
+        <p>"든든하게 자라가는 해"</p>
+        <h3>2024년 늘푸른교회 표어</h3>
+        <p>“모퉁이 돌인 예수님 위에(엡2:20)"</p>
     </section>
-    <section id="about">
-        <h2>소개</h2>
-        <p>서울시 광진구 어린이 대공원역 앞에 위치해있는 작은 교회입니다.</p>
+
+    <!-- 담임 목사 소개 -->
+    <section id="pastor">
+        <h2>담임 목사 소개</h2>
+        <p>안녕하십니까? 늘푸른교회 담임목사 박해근입니다...</p>
+        <h3>담임목사 소개</h3>
+        <p>1983년 2월 전남 대학교 공과대학 토목공학과 졸업...</p>
     </section>
-    <section id="contact">
-        <h2>연락처</h2>
-        <p>언제든 연락 주세용</p>
+
+    <!-- 교회 연혁 -->
+    <section id="history">
+        <h2>교회 연혁</h2>
+        <ul>
+            <li>1997.1. 첫 주일 예배 시작</li>
+            <li>1997.8. 김춘선 선교사 필리핀 파송</li>
+            <li>2023.10.14 현재 예배당 자리로 교회 이전</li>
+        </ul>
+    </section>
+
+    <!-- 교회 조직 -->
+    <section id="organization">
+        <h2>교회 조직</h2>
+        <ul>
+            <li>담임목사: 박해근</li>
+            <li>부목사: 이광수</li>
+            <li>전도사: 권순늠</li>
+        </ul>
+    </section>
+
+    <!-- 예배 안내 -->
+    <section id="worship">
+        <h2>예배 안내</h2>
+        <ul>
+            <li>주일예배: 매 주일 오전 11시</li>
+            <li>오후기도회: 매 주일 오후 2시 30분</li>
+            <li>수요조장영상모임: 매주 수요일 저녁 9시 40분</li>
+        </ul>
+    </section>
+
+    <!-- 오시는 길 -->
+    <section id="location">
+        <h2>오시는 길</h2>
+        <p>여기에 오시는 길 정보가 들어갑니다.</p>
+    </section>
+
+    <!-- 사역 및 섬김 -->
+    <section id="ministries">
+        <h2>사역 및 섬김</h2>
+        <ul>
+            <li>타문화권 사역 - 필리핀, 우간다</li>
+            <li>캠퍼스 사역</li>
+            <li>봉사 사역</li>
+        </ul>
     </section>
 </main>
+
+<!-- 푸터 영역 -->
 <footer>
-    <p>&copy; 204 늘푸른교회</p>
+    <p>&copy; 2024 늘푸른 교회. All Rights Reserved.</p>
 </footer>
 </body>
 </html>
